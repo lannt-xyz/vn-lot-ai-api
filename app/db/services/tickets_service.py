@@ -1,6 +1,5 @@
 from collections import defaultdict
 from datetime import date
-import re
 from typing import List, Optional
 
 from sqlalchemy import select
@@ -12,14 +11,14 @@ class TicketsService:
     def __init__(self, db: Session):
         self.db = db
 
-    def _get_tickets(self, start_date: Optional[date] = None, end_date: Optional[date] = None) -> List[Tickets]:
+    def _get_tickets(self, start_date: Optional[date] = None, end_date: Optional[date] = None, result_updated: Optional[bool] = True) -> List[Tickets]:
         query = select(
             Tickets
-        ).where(
-            Tickets.result_updated.is_(True)
         ).order_by(
             Tickets.ticket_date.asc()
         )
+        if result_updated:
+            query = query.where(Tickets.result_updated.is_(result_updated))
         if start_date:
             query = query.where(Tickets.ticket_date >= start_date)
         if end_date:
@@ -67,3 +66,18 @@ class TicketsService:
         return {
             "data": results,
         }
+
+    def get_tickets(self, start_date: Optional[date] = None, end_date: Optional[date] = None) -> List[Tickets]:
+        tickets = self._get_tickets(start_date, end_date, False)
+        result = [
+            {
+                "date": ticket.ticket_date,
+                "cityCode": "xsmb",
+                "type": ticket.type,
+                "lotNumber": ticket.lot_number,
+                "matchedCount": ticket.matched_count,
+                "pay": ticket.pay,
+                "win": ticket.win,
+            } for ticket in tickets
+        ]
+        return sorted(result, key=lambda x: x["date"], reverse=True)
