@@ -1,0 +1,20 @@
+networks:
+  shared_network:
+    external: true
+
+services:
+  backend:
+    build:
+      context: .
+    container_name: vn-lot-ai-api
+    restart: always
+    environment:
+      - ENVIRONMENT=production
+    env_file:
+      - .env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - shared_network
+
+
