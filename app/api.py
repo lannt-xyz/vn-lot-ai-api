@@ -4,6 +4,7 @@ from fastapi.exceptions import  RequestValidationError
 from fastapi.encoders import jsonable_encoder
 
 from app import app
+from app.controller import dashboard
 from app.logs import logger
 from app.models.base_response_model import BaseResponseModel
 
@@ -47,3 +48,6 @@ def health_check():
         status_code=status.HTTP_200_OK,
         content=jsonable_encoder(BaseResponseModel(detail="Service is up and running.")),
     )
+
+api_version_prefix = "/v2"
+app.include_router(dashboard.router, prefix=api_version_prefix, tags=["Dashboard"])
