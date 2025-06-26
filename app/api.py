@@ -4,7 +4,7 @@ from fastapi.exceptions import  RequestValidationError
 from fastapi.encoders import jsonable_encoder
 
 from app import app
-from app.controller import dashboard, tickets
+from app.controller import algorithm, dashboard, tickets
 from app.logs import logger
 from app.models.base_response_model import BaseResponseModel
 
@@ -53,3 +53,5 @@ api_version_prefix = "/v2"
 app.include_router(dashboard.router, prefix=api_version_prefix, tags=["Dashboard"])
 
 app.include_router(tickets.router, prefix="", tags=["Tickets"])
+
+app.include_router(algorithm.router, prefix="/algorithm", tags=["Algorithms"])

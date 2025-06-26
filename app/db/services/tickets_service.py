@@ -2,7 +2,7 @@ from collections import defaultdict
 from datetime import date
 from typing import List, Optional
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.db.models.tickets import Tickets
@@ -81,3 +81,28 @@ class TicketsService:
             } for ticket in tickets
         ]
         return sorted(result, key=lambda x: x["date"], reverse=True)
+
+    def get_matched_by_algorithm(self) -> List[dict]:
+        # for the tickets has result_updated = True, count all matched_count by type
+        query = select(
+            Tickets.type,
+            func.sum(Tickets.matched_count).label("matched_count"),
+            func.sum(Tickets.pay).label("total_pay"),
+            func.sum(Tickets.win).label("total_win")
+        ).where(
+            Tickets.result_updated.is_(True)
+        ).group_by(
+            Tickets.type
+        ).order_by(
+            Tickets.type.asc()
+        )
+        result = self.db.execute(query)
+        matched_results = result.all()
+        result = []
+        for ticket_type, matched_count, total_pay, total_win in matched_results:
+            result.append({
+                "type": ticket_type,
+                "count": matched_count,
+                "profit": total_win - total_pay,
+            })
+        return result
