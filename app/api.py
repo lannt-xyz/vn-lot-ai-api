@@ -4,7 +4,7 @@ from fastapi.exceptions import  RequestValidationError
 from fastapi.encoders import jsonable_encoder
 
 from app import app
-from app.controller import algorithm, dashboard, tickets
+from app.controller import algorithm, dashboard, results, tickets
 from app.logs import logger
 from app.models.base_response_model import BaseResponseModel
 
@@ -52,3 +52,4 @@ def health_check():
 app.include_router(dashboard.router, tags=["Dashboard"])
 app.include_router(tickets.router, tags=["Tickets"])
 app.include_router(algorithm.router, tags=["Algorithms"])
+app.include_router(results.router, tags=["Results"])

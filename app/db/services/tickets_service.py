@@ -25,7 +25,6 @@ class TicketsService:
             query = query.where(Tickets.ticket_date <= end_date)
         result = self.db.execute(query)
         tickets: List[Tickets] = result.scalars().all()
-        
         return tickets
 
     def get_profit_summary(self, start_date: Optional[date] = None, end_date: Optional[date] = None) -> dict:
@@ -106,3 +105,7 @@ class TicketsService:
                 "profit": total_win - total_pay,
             })
         return result
+
+    def get_today_results(self) -> List[Tickets]:
+        today = date.today()
+        return self._get_tickets(start_date=today, end_date=today, result_updated=True)

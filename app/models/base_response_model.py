@@ -14,3 +14,10 @@ class BaseResponseModel(CamelModel):
     def ok(data: CamelModel) -> JSONResponse:
         return JSONResponse(content=jsonable_encoder(data))
 
+    @staticmethod
+    def no_content() -> JSONResponse:
+        return JSONResponse(
+            status_code=204,
+            content=jsonable_encoder(BaseResponseModel(detail="No content"))
+        )
+
