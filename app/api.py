@@ -42,14 +42,15 @@ async def global_exception_handler(request: Request, exc: Exception):
         content=jsonable_encoder(BaseResponseModel(detail="System error occurred. Please try again later.")),
     )
 
-@app.get("/health")
+api_version_prefix = "/v2"
+
+@app.get(f"{api_version_prefix}/health")
 def health_check():
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content=jsonable_encoder(BaseResponseModel(detail="Service is up and running.")),
     )
 
-api_version_prefix = "/v2"
 
 app.include_router(dashboard.router, prefix=api_version_prefix, tags=["Dashboard"])
 app.include_router(tickets.router, prefix=api_version_prefix, tags=["Tickets"])
