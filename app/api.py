@@ -54,4 +54,4 @@ app.include_router(dashboard.router, prefix=api_version_prefix, tags=["Dashboard
 
 app.include_router(tickets.router, prefix="", tags=["Tickets"])
 
-app.include_router(algorithm.router, prefix="/algorithm", tags=["Algorithms"])
+app.include_router(algorithm.router, prefix="", tags=["Algorithms"])

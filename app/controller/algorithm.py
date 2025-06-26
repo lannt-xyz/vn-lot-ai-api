@@ -8,7 +8,7 @@ from app.models.base_response_model import BaseResponseModel
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("/algorithm")
 def get_algorithms(
     db: Session = Depends(get_session),
 ):
